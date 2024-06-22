@@ -1,22 +1,23 @@
-import React from "react"
+import React, { Component } from "react"
 
-const BemVindo = (props) => {
-  return(
-    <div>
-      <h2>Bem-vindo(a) {props.nome}</h2>
-      <h3>Tenho {props.idade} anos</h3>
-    </div>
-  )
+class Equipe extends Component{
+  render(){
+    return(
+      <div>
+        <h2>Olá sou o(a) {this.props.nome} </h2>
+        <h3>Cargo: {this.props.cargo} </h3>
+      </div>
+    )
+  }
 }
 
 function App(){
   return(
     <div>
-      <h1>Olá mundo!</h1>
-      <BemVindo nome='Gabriel' idade='20'/>
-      <BemVindo nome='Malu' idade='17'/>
+      <h1>Conheça nossa equipe:</h1>
+      <Equipe nome='Gabriel' cargo='Programador' />
     </div>
-  ) 
+  )
 }
 
 export default App
