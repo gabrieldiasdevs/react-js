@@ -5,53 +5,55 @@ class App extends Component{
   constructor(props){
     super(props)
     this.state = {
-      email: 'teste@teste.com',
-      senha: '123123',
-      sexo: 'masculino'
+      nome: '',
+      idade: ''
     }
 
-    this.trocaEmail = this.trocaEmail.bind(this)
-    this.trocaSexo = this.trocaSexo.bind(this)
+    this.enviarDados = this.enviarDados.bind(this)
   }
 
-  trocaEmail(text){
-    let valorDigitado = text.target.value
-    this.setState({ email: valorDigitado })
-  }
+  enviarDados(event){
+    const {nome, idade} = this.state
 
-  trocaSexo(text){
-    this.setState({ sexo: text.target.value })
+    if(nome === '' || idade === ''){
+      alert('Digite nos campos abaixo!')
+      return
+    }
+    alert(`Você é o ${nome} e você tem ${idade} anos!`)
+
+    event.preventDefault()
   }
 
   render(){
     return(
       <div>
-        <h2>Login</h2>
-        Email:
-        <input 
-          type='email' 
-          name='email' 
-          value={this.state.email}
-          onChange={this.trocaEmail}
-        />
+        <h1>Dados Pessoais</h1>
 
-        <br/>
+        <form>
+          <label>Nome: </label>
+          <input
+            type='text'
+            value={this.state.nome}
+            onChange={ (text) => this.setState({ nome: text.target.value }) }
+          />
 
-        Senha:
-        <input 
-          type='password' 
-          name='senha' 
-          value={this.state.senha}
-          onChange={ (text) => this.setState({ senha: text.target.value }) }
-        />
+          <br/>
 
-        <br/>
+          <label>Idade: </label>
+          <input
+            type='text'
+            value={this.state.idade}
+            onChange={ (text) => this.setState({ idade: text.target.value }) }
+          />
+          <button
+            type='submit'
+            onClick={this.enviarDados}
+          >ENVIAR</button>
+        </form>
 
-        Sexo:
-        <select name='sexo' value={this.state.sexo} onChange={this.trocaSexo} >
-          <option value='masculino' >Masculino</option>
-          <option value='feminino' >Feminino</option>
-        </select>
+        
+        
+
       </div>
     )
   }
