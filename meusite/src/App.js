@@ -5,23 +5,22 @@ class App extends Component{
   constructor(props){
     super(props)
     this.state = {
-      nome: '',
-      idade: ''
+      form:{
+        nome: '',
+        idade: '',
+        email: '',
+        senha: ''
+      }
     }
 
-    this.enviarDados = this.enviarDados.bind(this)
+    this.dadosForm = this.dadosForm.bind(this)
   }
 
-  enviarDados(event){
-    const {nome, idade} = this.state
+  dadosForm(evento){
+    let form = this.state.form
+    form[evento.target.name] = evento.target.value
 
-    if(nome === '' || idade === ''){
-      alert('Digite nos campos abaixo!')
-      return
-    }
-    alert(`Você é o ${nome} e você tem ${idade} anos!`)
-
-    event.preventDefault()
+    this.setState({ form: form })
   }
 
   render(){
@@ -32,28 +31,49 @@ class App extends Component{
         <form>
           <label>Nome: </label>
           <input
+            name='nome'
             type='text'
-            value={this.state.nome}
-            onChange={ (text) => this.setState({ nome: text.target.value }) }
+            value={this.state.form.nome}
+            onChange={this.dadosForm}
           />
 
           <br/>
 
           <label>Idade: </label>
           <input
+            name='idade'
             type='text'
-            value={this.state.idade}
-            onChange={ (text) => this.setState({ idade: text.target.value }) }
+            value={this.state.form.idade}
+            onChange={this.dadosForm}
           />
+
+          <br/>
+
+          <label>Email: </label>
+          <input
+            name='email'
+            type='text'
+            value={this.state.form.email}
+            onChange={this.dadosForm}
+          />
+
+          <br/>
+
+          <label>Senha: </label>
+          <input
+            name='senha'
+            type='password'
+            value={this.state.form.senha}
+            onChange={this.dadosForm}
+          />
+
           <button
             type='submit'
             onClick={this.enviarDados}
-          >ENVIAR</button>
+          >ENVIAR
+          </button>
+
         </form>
-
-        
-        
-
       </div>
     )
   }
