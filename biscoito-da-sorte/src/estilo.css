@@ -14,5 +14,6 @@
 
 .textoFrase{
   font-style: italic;
-  color: #DD7B22;
+  color: #dd7b22;
+  text-align: center;
 }
