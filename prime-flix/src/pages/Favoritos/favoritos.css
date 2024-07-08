@@ -42,7 +42,21 @@
 }
 
 .meus-filmes div a:hover{
-  text-decoration: none;
   background-color: #116feb;
+  color: #FFF;
+}
+
+.meus-filmes div button{
+  outline: none;
+  border: none;
+  background-color: #FFF;
+  color: #df0000;
+  padding: 3px;
+  border-radius: 3px;
+  transition: all 0.5s;
+}
+
+.meus-filmes div button:hover{
+  background-color: #df0000;
   color: #FFF;
 }
