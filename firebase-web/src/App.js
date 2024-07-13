@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { db } from './firebaseConnection'
-import { doc, setDoc, collection, addDoc, getDoc, getDocs } from 'firebase/firestore'
+import { doc, setDoc, collection, addDoc, getDoc, getDocs, updateDoc } from 'firebase/firestore'
 
 import './app.css'
  
 function App() {
   const [titulo, setTitulo] = useState('')
   const [autor, setAutor] = useState('')
+  const [idPost, setIdPost] = useState('')
   const [posts, setPosts] = useState([])
 
   async function handleAdd(){
@@ -67,11 +68,35 @@ function App() {
     })
   }
 
+  async function editarPosts(){
+    const docRef = doc(db, 'posts', idPost)
+    await updateDoc(docRef, {
+      titulo: titulo,
+      autor: autor
+    })
+    .then(() => {
+      console.log('Dados Atualizados!')
+      setIdPost('')
+      setAutor('')
+      setTitulo('')
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }
+
   return (
     <div>
       <h1>Firebase + ReactJS</h1>
 
       <div className='container'>
+
+        <label>ID do Post:</label>
+        <input
+          placeholder='Digite o ID do Post'
+          value={idPost}
+          onChange={(e) => setIdPost(e.target.value)}
+        /> <br/>
 
         <label>Titulo:</label>
         <textarea
@@ -79,7 +104,7 @@ function App() {
           placeholder='digite o titulo'
           value={titulo}
           onChange={(e) => setTitulo(e.target.value)}
-        />
+        /> <br/>
 
         <label>Autor:</label>
         <input
@@ -87,15 +112,17 @@ function App() {
           placeholder='autor do post'
           value={autor}
           onChange={(e) => setAutor(e.target.value)}
-        />
+        /> <br/>
 
         <button onClick={handleAdd} >Cadastrar</button>
-        <button onClick={buscarPosts} >Buscar Posts</button>
+        <button onClick={buscarPosts} >Buscar Posts</button> <br/>
+        <button onClick={editarPosts} >Atualizar Posts</button>
 
         <ul>
           {posts.map((post) => {
             return(
               <li>
+                <strong>ID: {post.id}</strong> <br/>
                 <span>Titulo: {post.titulo}</span> <br/>
                 <span>Autor: {post.autor}</span> <br/> <br/>
               </li>
