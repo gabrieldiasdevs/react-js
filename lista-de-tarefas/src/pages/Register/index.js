@@ -1,15 +1,25 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { auth } from '../../services/firebaseConnection'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
  
 function Register(){
+  const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   async function handleRegister(){
     await createUserWithEmailAndPassword(auth, email, password)
-  }
+    .then(() => {
+      console.log('usuario registrado')
+      setEmail('')
+      setPassword('')
+      navigate('/admin')
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  } 
 
   return(
     <div className='container' >
@@ -17,11 +27,13 @@ function Register(){
       <p>Vamos criar sua conta.</p>
 
       <input
+        type='text'
         placeholder='Digite seu email'
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
       <input
+        type='password'
         placeholder='Digite sua senha'
         value={password}
         onChange={(e) => setPassword(e.target.value)}
