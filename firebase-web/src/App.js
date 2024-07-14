@@ -10,7 +10,11 @@ import {
   onSnapshot
 } from 'firebase/firestore'
 
-import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { 
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut
+} from 'firebase/auth'
 
 import './app.css'
  
@@ -22,6 +26,8 @@ function App() {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [user, setUser] = useState(false)
+  const [userDetail, setUserDetail] = useState({})
 
   useEffect(() => {
 
@@ -143,9 +149,41 @@ function App() {
     })
   }
 
+  async function logarUsuario(){
+    await signInWithEmailAndPassword(auth, email, password)
+    .then((value) => {
+      setUserDetail({
+        uid: value.user.uid,
+        email: value.user.email
+      })
+
+      setUser(true)
+      setEmail('')
+      setPassword('')
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }
+
+  async function fazerLogout(){
+    await signOut(auth)
+    setUser(false)
+    setUserDetail({})
+  }
+
   return (
     <div>
       <h1>Firebase + ReactJS</h1>
+
+      {user && (
+        <div>
+          <strong>Seja bem-vindo(a) você está logado!</strong> <br/>
+          <span>ID: {userDetail.uid} - EMAIL: {userDetail.email}</span> <br/>
+          <button onClick={fazerLogout} >Sair da Conta</button> 
+          <br/> <br/>
+        </div>
+      )}
 
       <div className='container' >
         <h2>Usuários</h2>
@@ -165,6 +203,7 @@ function App() {
         /> <br/>
 
         <button onClick={novoUsuario} >Cadastrar</button>
+        <button onClick={logarUsuario} >Fazer Login</button>
       </div>
 
       <br/> <br/>
