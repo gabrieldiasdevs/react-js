@@ -4,6 +4,8 @@ import {
   doc, 
   collection, 
   addDoc, 
+  setDoc,
+  getDoc,
   getDocs, 
   updateDoc, 
   deleteDoc,
@@ -13,7 +15,8 @@ import {
 import { 
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  signOut
+  signOut,
+  onAuthStateChanged
 } from 'firebase/auth'
 
 import './app.css'
@@ -48,6 +51,29 @@ function App() {
     }
 
     loadPosts()
+
+  }, [])
+
+  useEffect(() => {
+
+    async function checkLogin(){
+      onAuthStateChanged(auth, (user) => {
+        if(user){
+
+          setUser(true)
+          setUserDetail({
+            uid: user.uid,
+            email: user.email
+          })
+
+        }else{
+          setUser(false)
+          setUserDetail({})
+        }
+      })
+    }
+
+    checkLogin()
 
   }, [])
 
