@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { db } from './firebaseConnection'
+import { db, auth } from './firebaseConnection'
 import { 
   doc, 
   collection, 
@@ -10,6 +10,8 @@ import {
   onSnapshot
 } from 'firebase/firestore'
 
+import { createUserWithEmailAndPassword } from 'firebase/auth'
+
 import './app.css'
  
 function App() {
@@ -17,6 +19,9 @@ function App() {
   const [autor, setAutor] = useState('')
   const [idPost, setIdPost] = useState('')
   const [posts, setPosts] = useState([])
+
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
 
   useEffect(() => {
 
@@ -125,12 +130,48 @@ function App() {
       console.log(error)
     })
   }
+  
+  async function novoUsuario(){
+    await createUserWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      console.log('Cadastrado com cucesso')
+      setEmail('')
+      setPassword('')
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }
 
   return (
     <div>
       <h1>Firebase + ReactJS</h1>
 
+      <div className='container' >
+        <h2>Usuários</h2>
+
+        <label>Email</label>
+        <input
+          value={email}
+          placeholder='Digite um email'
+          onChange={(e) => setEmail(e.target.value)}
+        /> <br/>
+
+        <label>Senha</label>
+        <input
+          value={password}
+          placeholder='Informe sua senha'
+          onChange={(e) => setPassword(e.target.value)}
+        /> <br/>
+
+        <button onClick={novoUsuario} >Cadastrar</button>
+      </div>
+
+      <br/> <br/>
+      <hr/>
+
       <div className='container'>
+        <h2>Posts</h2>
 
         <label>ID do Post:</label>
         <input
