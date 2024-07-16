@@ -1,0 +1,33 @@
+.container-home{
+  background-color: #14161A;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.container-home h1{
+  color: #FFF;
+  margin-top: 100px;
+}
+
+.container-home input{
+  max-width: 550px;
+  width: 85%;
+  padding: 10px 10px 100px 10px;
+  border-radius: 5px;
+  margin: 15px;
+  outline: none;
+  border: none;
+}
+
+.container-home button{
+  max-width: 550px;
+  width: 85%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  color: #FFF;
+  background-color: #2C69FF;
+}
