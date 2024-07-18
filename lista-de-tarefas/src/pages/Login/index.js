@@ -12,11 +12,11 @@ function Login(){
 
   async function handleLogin(){
     await signInWithEmailAndPassword(auth, email, password)
-    .then(() => {
+    .then((value) => {
       console.log('usuario logado')
       setEmail('')
       setPassword('')
-      navigate('/admin')
+      navigate('/admin', { state: { idUser: value.user.uid }})
     })
     .catch((error) => {
       console.log(error)
