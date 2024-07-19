@@ -1,55 +1,58 @@
-*{
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-  font-family: sans-serif;
-}
-
-.container{
-  background-color: #14161A;
-  width: 100vw;
-  height: 100vh;
+.home-container{
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  height: 100vh;
+  width: 100%;
 }
 
-.container h1{
-  color: #FFF;
-  font-size: 2.5rem;
+.home-container h1{
+  font-size: 48px;
+  margin-bottom: 8px;
 }
 
-.container p{
-  color: #FFF;
-  margin-top: 10px;
-  margin-bottom: 20px;
+.home-container span{
+  margin-bottom: 28px;
 }
 
-.container input{
-  max-width: 550px;
-  width: 85%;
-  border: none;
-  border-radius: 5px;
-  padding: 10px;
-  margin-bottom: 10px;
+.form{
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  max-width: 600px;
+}
+
+.form input{
+  border:0;
+  margin-bottom: 12px;
+  height: 36px;
+  border-radius: 4px;
+  padding: 0 8px;
   outline: none;
 }
 
-.container button{
-  border: none;
-  max-width: 550px;
-  width: 85%;
-  padding: 10px;
-  border-radius: 5px;
+.form button{
+  height: 36px;
+  border:0;
+  border-radius: 4px;
+  background-color: #3366ff;
   color: #FFF;
-  background-color: #2C69FF;
-  cursor: pointer;
+  font-size: 18px;
 }
 
-.container a{
-  color: #CCC;
-  margin-top: 15px;
-  cursor: pointer;
+.form textarea{
+  margin-bottom: 12px;
+  border:0;
+  height: 90px;
+  resize: none;
+  border-radius: 4px;
+  padding: 8px;
+} 
+
+.button-link{
+  color: #b4b8bb;
   text-decoration: none;
+  margin: 14px 0;
+  font-size: 14px;
 }

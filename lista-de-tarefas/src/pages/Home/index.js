@@ -1,51 +1,152 @@
 import { useState, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import './home.css'
+
+import { auth, db } from '../../services/firebaseConnection'
+import { signOut } from 'firebase/auth'
+
 import { 
   addDoc,
   collection,
-  updateDoc 
+  onSnapshot,
+  query,
+  orderBy,
+  where,
+  doc,
+  deleteDoc,
+  updateDoc
 } from 'firebase/firestore'
-import { db } from '../../services/firebaseConnection'
 
-import './home.css'
+export default function Home(){
+  const [tarefaInput, setTarefaInput] = useState('')
+  const [user, setUser] = useState({})
+  const [edit, setEdit] = useState({})
 
-function Home(){
-  const location = useLocation();
-  const { idUser } = location.state || {}
-  const [tarefa, setTarefa] = useState('')
+  const [tarefas, setTarefas] = useState([]);
 
   useEffect(() => {
-    console.log(idUser)
+    async function loadTarefas(){
+      const userDetail = localStorage.getItem("@detailUser")
+      setUser(JSON.parse(userDetail))
+
+      if(userDetail){
+        const data = JSON.parse(userDetail);
+        
+        const tarefaRef = collection(db, "tarefas")
+        const q = query(tarefaRef, orderBy("created", "desc"), where("userUid", "==", data?.uid))
+
+        const unsub = onSnapshot(q, (snapshot) => {
+          let lista = [];
+
+          snapshot.forEach((doc)=> {
+            lista.push({
+              id: doc.id,
+              tarefa: doc.data().tarefa,
+              userUid: doc.data().userUid
+            })
+          })
+          
+          setTarefas(lista);
+        })
+      }
+    }
+
+    loadTarefas();
   }, [])
 
-  async function handleRegisterTask(){
-    await addDoc(collection(db, 'tarefas'), {
-      idUser: idUser
-    })
-    const docRef = doc(db, 'tarefas', idUser); // Assume que o documento é identificado pelo ID do usuário
-    await updateDoc(docRef, {
-      tarefas: arrayUnion(tarefa) // Adiciona a nova tarefa ao array existente
+  async function handleRegister(e){
+    e.preventDefault();
+
+    if(tarefaInput === ''){
+      alert("Digite sua tarefa...")
+      return;
+    }
+
+    if(edit?.id){
+      handleUpdateTarefa();
+      return;
+    }
+
+
+    await addDoc(collection(db, "tarefas"), {
+      tarefa: tarefaInput,
+      created: new Date(),
+      userUid: user?.uid
     })
     .then(() => {
-      console.log('deu certo')
-      setTarefa('')
+      console.log("TAREFA REGISTRADA")
+      setTarefaInput('')
     })
     .catch((error) => {
-      console.log(error)
+      console.log("ERRO AO REGISTRAR " + error)
+    })
+
+
+  }
+
+  async function handleLogout(){
+    await signOut(auth);
+  }
+
+  async function deleteTarefa(id){
+    const docRef = doc(db, "tarefas", id)
+    await deleteDoc(docRef)
+  }
+
+  function editTarefa(item){
+    setTarefaInput(item.tarefa)
+    setEdit(item);
+  }
+
+
+  async function handleUpdateTarefa(){
+    const docRef = doc(db, "tarefas", edit?.id)
+    await updateDoc(docRef, {
+      tarefa: tarefaInput
+    })
+    .then(() => {
+      console.log("TAREFA ATUALIZADA")
+      setTarefaInput('')
+      setEdit({})
+    })
+    .catch(() => {
+      console.log("ERRO AO ATUALIZAR")
+      setTarefaInput('')
+      setEdit({})
     })
   }
 
   return(
-    <div className='container-home' >
-      <h1>Minhas Tarefas</h1>
-      <input
-        placeholder='Digite sua tarefa...'
-        value={tarefa}
-        onChange={(e) => setTarefa(e.target.value)}
-      />
-      <button onClick={handleRegisterTask} >Registrar tarefa</button>
+    <div className="admin-container">
+      <h1>Minhas tarefas</h1>
+
+      <form className="form" onSubmit={handleRegister}>
+        <textarea
+          placeholder="Digite sua tarefa..."
+          value={tarefaInput}
+          onChange={(e) => setTarefaInput(e.target.value) }
+        />
+
+        {Object.keys(edit).length > 0 ? (
+          <button className="btn-register" type="submit">Atualizar tarefa</button>
+        ) : (
+          <button className="btn-register" type="submit">Registrar tarefa</button>
+        )}
+      </form>
+
+      {tarefas.map((item) => (
+      <article key={item.id} className="list">
+        <p>{item.tarefa}</p>
+
+        <div>
+          <button onClick={ () => editTarefa(item) }>Editar</button>
+          <button onClick={ () => deleteTarefa(item.id) } className="btn-delete">Concluir</button>
+        </div>
+      </article>
+      ))}
+
+
+      <button className="btn-logout" onClick={handleLogout}>Sair</button>
+
     </div>
   )
 }
-
-export default Home
