@@ -3,3 +3,26 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+html, body, #root{
+  height: 100%;
+}
+
+body{
+  background-color: #EFEFEF;
+  font: 14px;
+  font-family: sans-serif;
+}
+
+a{
+  text-decoration: none;
+  cursor: pointer;
+}
+
+ul{
+  list-style: none;
+}
+
+button{
+  cursor: pointer;
+}
