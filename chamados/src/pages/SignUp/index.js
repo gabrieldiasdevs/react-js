@@ -7,6 +7,14 @@ export default function SignUp(){
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
+  function handleRegister(e){
+    e.preventDefault()
+
+    if(name !== '' && email !== '' && password !== ''){
+
+    }
+  }
+
   return(
     <div className='container-center' >
       <div className='login' >
@@ -14,7 +22,7 @@ export default function SignUp(){
           <img src={logo} alt='Logo do sistema de chamados' />
         </div>
 
-        <form>
+        <form onSubmit={handleRegister} >
           <h1>Nova conta</h1>
           <input
             type='text'
