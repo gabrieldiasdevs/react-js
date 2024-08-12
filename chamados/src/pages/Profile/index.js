@@ -38,12 +38,23 @@ export default function Profile(){
               )}
 
             </label>
-          </form>
 
+            <label>Nome</label>
+            <input value={user.nome} type='text' placeholder='Seu nome' />
+
+            <label>Email</label>
+            <input type='text' placeholder='teste@teste.com' disabled={true} />
+
+            <button type='submit' >Salvar</button>
+
+          </form>
+        </div>
+
+        <div className='container' >
+          <button className='logout-btn' >Sair</button>
         </div>
 
       </div>
-      <h1>Página Perfil</h1>
     </div>
   )
 }
