@@ -1,20 +1,31 @@
-import { useState } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { FiPlusCircle } from 'react-icons/fi'
-
+import { AuthContext } from '../../contexts/auth'
 import Header from '../../components/Header'
 import Title from '../../components/Title'
 
 import './new.css'
 
 export default function New(){
+  const { user } = useContext(AuthContext)
+
   const [customers, setCustomers] = useState([])
+  const [loadCustomer, setLoadCustomer] = useState(true)
 
   const [complemento, setComplemento] = useState('')
   const [assunto, setAssunto] = useState('Suporte')
   const [status, setStatus] = useState('Aberto')
 
+  useEffect(() => {
+
+  }, [])
+
   function handleOptionChange(e){
     setStatus(e.target.value)
+  }
+
+  function handleChangeSelect(e){
+    setAssunto(e.target.value)
   }
   
   return(
@@ -36,7 +47,7 @@ export default function New(){
             </select>
 
             <label>Assunto</label>
-            <select>
+            <select value={assunto} onChange={handleChangeSelect}>
               <option value='Suporte' >Suporte</option>
               <option value='Visita Tecnica' >Visita Tecnica</option>
               <option value='Financeiro' >Financeiro</option>
