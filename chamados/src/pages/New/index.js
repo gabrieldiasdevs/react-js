@@ -4,20 +4,57 @@ import { AuthContext } from '../../contexts/auth'
 import Header from '../../components/Header'
 import Title from '../../components/Title'
 
+import { db } from '../../services/firebaseConnection'
+import { collection, getDocs, getDoc, doc } from 'firebase/firestore'
+
 import './new.css'
+
+const listRef = collection(db, 'customers')
 
 export default function New(){
   const { user } = useContext(AuthContext)
 
   const [customers, setCustomers] = useState([])
   const [loadCustomer, setLoadCustomer] = useState(true)
+  const [customerSelected, setCustomerSelected] = useState(0)
 
   const [complemento, setComplemento] = useState('')
   const [assunto, setAssunto] = useState('Suporte')
   const [status, setStatus] = useState('Aberto')
 
   useEffect(() => {
+    async function loadCustomers(){
+      const querySnapshot = await getDocs(listRef)
+      .then((snapshot) => {
 
+        let lista = []
+
+        snapshot.forEach((doc) => {
+          lista.push({
+            id: doc.id,
+            nomeFantasia: doc.data().nomeFantasia
+          })
+        })
+
+        if(snapshot.docs.size === 0){
+          console.log('NENHUMA EMPRESA ENCONTRADA')
+          setCustomers([{id: 1, nomeFantasia: 'FREELA'}])
+          setLoadCustomer(false)
+          return
+        }
+
+        setCustomers(lista)
+        setLoadCustomer(false)
+
+      })
+      .catch((error) => {
+        console.log('Erro ao buscar os clientes', error)
+        setLoadCustomer(false)
+        setCustomers([{id: 1, nomeFantasia: 'FREELA'}])
+      })
+    }
+
+    loadCustomers()
   }, [])
 
   function handleOptionChange(e){
@@ -26,6 +63,10 @@ export default function New(){
 
   function handleChangeSelect(e){
     setAssunto(e.target.value)
+  }
+
+  function handleChangeCustomer(e){
+    setCustomerSelected(e.target.value)
   }
   
   return(
@@ -41,10 +82,21 @@ export default function New(){
           <form className='form-profile'>
 
             <label>Clientes</label>
-            <select>
-              <option key={1} value={1} >Mercado Matias</option>
-              <option key={2} value={2} >Loja Centro</option>
-            </select>
+            {
+              loadCustomer ? (
+                <input type='text' disabled={true} value='Carregando...'/>
+              ) : (
+                <select value={customerSelected} onChange={handleChangeCustomer} >
+                  {customers.map((item, index) => {
+                    return(
+                      <option key={index} value={index}>
+                        {item.nomeFantasia}
+                      </option>
+                    )
+                  })}
+                </select>
+              )
+            }
 
             <label>Assunto</label>
             <select value={assunto} onChange={handleChangeSelect}>
