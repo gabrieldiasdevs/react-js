@@ -114,8 +114,30 @@ export default function Dashboard(){
                       </button>
                     </td>
                   </tr>
+
+                  {chamados.map((doc, index) => (
+                    <tr key={index}>
+                      <td data-label='Cliente'>{doc.cliente}</td>
+                      <td data-label='Assunto'>{doc.assunto}</td>
+                      <td data-label='Status'>
+                        <span className='badge' style={{ backgroundColor: '#999' }}>
+                          {doc.status}
+                        </span>
+                      </td>
+                      <td data-label='Cadastrado'>02/02/2200</td>
+                      <td data-label='#'>
+                        <button className='action' style={{ backgroundColor: '#3583f6' }}>
+                          <FiSearch color='#FFF' size={17} />
+                        </button>
+                        <button className='action' style={{ backgroundColor: '#f6a935' }}>
+                          <FiEdit2 color='#FFF' size={17} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+
                 </tbody>
-                
+
               </table>
             </>
           )}
