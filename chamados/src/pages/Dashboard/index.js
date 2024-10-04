@@ -22,6 +22,8 @@ export default function Dashboard(){
   const [chamados, setChamados] = useState([])
   const [loading, setLoading] = useState(true);
   const [isEmpty, setIsEmpty] = useState(false)
+  const [lastDocs, setLastDocs] = useState()
+  const [loadingMore, setLoadingMore] = useState(false)
 
 
   useEffect(() => {
@@ -38,7 +40,6 @@ export default function Dashboard(){
     }
 
     loadChamados();
-
 
     return () => { }
   }, [])
@@ -63,17 +64,25 @@ export default function Dashboard(){
         })
       })
 
-      setChamados(chamados => [...chamados, ...lista])
+      const lastDoc = querySnapshot.docs[querySnapshot.docs.length - 1]
+      setLastDocs(lastDoc)
 
+      setChamados(chamados => [...chamados, ...lista])
 
     }else{
       setIsEmpty(true);
     }
-    
 
-
+    setLoadingMore(false)
   }
 
+  async function handleMore(){
+    setLoadingMore(true)
+
+    const q = query(listRef, orderBy('created', 'desc'), startAfter(lastDocs), limit(5));
+    const querySnapshot = await getDocs(q)
+    await updateState(querySnapshot)
+  }
 
   if(loading){
     return(
@@ -135,7 +144,7 @@ export default function Dashboard(){
                         <td data-label="Cliente">{item.cliente}</td>
                         <td data-label="Assunto">{item.assunto}</td>
                         <td data-label="Status">
-                          <span className="badge" style={{ backgroundColor: '#999' }}>
+                          <span className="badge" style={{ backgroundColor: item.status === 'Aberto' ? '#5cb85c' : '#999' }}>
                             {item.status}
                           </span>
                         </td>
@@ -152,7 +161,10 @@ export default function Dashboard(){
                     )
                   })}
                 </tbody>
-              </table>              
+              </table> 
+
+              {loadingMore && <h3>Buscando mais chamados...</h3>}
+              {!loadingMore && !isEmpty && <button className='btn-more' onClick={handleMore} >Buscar mais</button>}          
             </>
           )}
         </>
