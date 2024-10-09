@@ -26,6 +26,7 @@ export default function New(){
   const [complemento, setComplemento] = useState('')
   const [assunto, setAssunto] = useState('Suporte')
   const [status, setStatus] = useState('Aberto')
+  const [idCustomer, setIdCustomer] = useState(false)
 
   useEffect(() => {
     async function loadCustomers(){
@@ -76,9 +77,11 @@ export default function New(){
 
       let index = lista.findIndex(item => item.id === snapshot.data().clienteId)
       setCustomerSelected(index)
+      setIdCustomer(true)
     })
     .catch((error) => {
       console.log(error)
+      setIdCustomer(false)
     })
   }
 
@@ -96,6 +99,10 @@ export default function New(){
   
   async function handleRegister(e){
     e.preventDefault()
+
+    if(idCustomer){
+      
+    }
 
     await addDoc(collection(db, 'chamados'), {
       created: new Date(),
@@ -191,7 +198,7 @@ export default function New(){
               onChange={(e) => setComplemento(e.target.value)}
             />
 
-            <button type='submit'>Registrar</button>
+            <button type='submit'>{idCustomer ? 'Atualizar' : 'Registrar'}</button>
 
           </form>
         </div>
