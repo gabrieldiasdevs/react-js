@@ -11,6 +11,7 @@ import { getDocs, collection, orderBy, limit, startAfter, query } from 'firebase
 import { AuthContext } from '../../contexts/auth'
 
 import { format } from 'date-fns'
+import Modal from '../../components/Modal'
 
 import './dashboard.css'
 
@@ -170,6 +171,9 @@ export default function Dashboard(){
         </>
 
       </div>
+        
+      <Modal/>
+
     </div>
   )
 }
